@@ -1,0 +1,120 @@
+---
+title: "BEE 4750/5750 Homework 1"
+author: "Akanksha Srivastava (as2752)"
+date: `j import Dates; Dates.Date(Dates.now())`
+weave_options:
+    term: true
+    cache: off
+    md2pdf:
+        template: "bee4750pdf.tpl"
+    md2html:
+        template: "bee4750html.tpl"
+---
+
+<!-- This setups the environment and installs packages, but doesn't appear in the generated document -->
+<!-- You shouldn't need to modify this -->
+```julia; echo = false; results = "hidden"
+using Pkg
+Pkg.activate(dirname(@__FILE__))
+Pkg.instantiate()
+```
+
+# Problem 1
+
+## Problem 1.1
+![System Diagram]("model_image.png")
+Figure 1 (next page) shows a diagram of the system. 
+The two key parameters in this diagram are 
+$X_1$ (the amount of water treated by land in $m^3/day$) and
+$X_2$ (the amount of water treated chemically in $m^3/day$).
+
+## Problem 1.2
+In order to determine the YUK concentration of the total $100  m^3/day$ after treatment,
+we must determine the individual amount of YUK that is actually making it to Pristine Brook. 
+Here, $M_l$ is the mass of YUK from land treatment, $M_c$ is the mass of YUK from chemical
+treatment, $M_u$ is the mass of YUK going directly to the brook, and $M_t$ is the total mass
+of YUK reaching the brook.
+
+``` math
+M_l = 0.2  kg/m^3 * X_1  m^3/day = 0.2X_1  kg/day
+```
+``` math
+M_c = 0.05X_2  kg/m^3 * X_2  m^3/day = 0.005X_2^2  kg/day
+```
+``` math
+M_u = 1  kg/m^3 * (100 - X_1 - X_2)  m^3/day = 100 - X_1 - X_2  kg/day
+```
+``` math
+M_t = M_l + M_c + M_u = 100 - 0.8X_1 - X_2 + 0.005X_2^2  kg/day
+```
+
+We then divide the total mass by the volume of water that is being delivered to the brook
+to find $C_Y$, the YUK concentration in $kg/m^3$:
+
+```math
+C_Y = M_t / 100 m^3/day = 1 - 0.008X_1 - 0.01X_2 + 0.00005X_2^2 kg/m^3
+```
+
+## Problem 1.3
+The following function takes $X_1$ and $X_2$ as parameters and
+returns the concentration of YUK and cost of treatment in tuple form.
+Note that the concentration calculated in the function is in units of kg/day. 
+This is to make comparisons between the calculated mass of YUK and the EPA limit easier.
+
+```julia
+function YUK(X1, X2)
+    Ml = 0.2*X1
+    Mc = 0.005*X2*X2
+    Mu = 100-X1-X2
+    conc = Ml + Mc + Mu #kg/day
+    cost = X1^2/20 + 1.5*X2 #dollars per day
+    return conc, cost
+end
+```
+## Problem 1.4
+
+After inputting some test values, it becomes clear that most valid treatment options will have 
+the water completely split between land and chemical treatments (i.e. none will go directly to the brook).
+
+It is noted that the land treatment option has an efficiency of exactly 80%, and the chemical treatment
+option has an efficiency ranging from 50% (if $X_2 = 100 m^3/day$) to 99.99% (if $X_2$ is as small as
+possible without being zero). Given that the 100 kg/day must be reduced by 80% to reach the 20 kg/day 
+limit, the chemical treatment option will have to have at least an 80% efficiency as well, which means that
+$X_2 < 40 m^3/day$. 
+
+Therefore, the above model is evaluated for $X_1$ values ranging from $60 m^3/day$ to $100 m^3/day$ 
+and $X_2$ values ranging from $40 m^3/day$ to $100 m^3/day$. This should ensure that all treatment options
+follow the effluent standard (in a red line).
+
+```julia
+X1 = 60:1:100;
+X2 = 40:-1:0;
+conc = zeros(length(X1));
+cost = zeros(length(X1));
+
+for i in 1:length(X1)
+    conc[i], cost[i] = YUK(X1[i], X2[i]);
+end
+
+using Plots
+scatter(conc,cost,label="Treatment Options", xlabel="Concentrations (kg/day)", ylabel="Cost (dollars/day)");
+vline!([20], label="EPA limit")
+```
+
+Based on the resulting scatter plot, it seems as though the array of treatments is somewhat parabolic.
+If we wanted to reach as low YUK concentrations as possible, we could reach 18 kg/day for $350$$/day$.
+If we wanted to reach as low costs as possible, we could meet the 20 kg/day limit for approximately $240$$/day$.
+
+## Problem 1.5
+Based on the plot from Problem 1.5, how would you select a treatment plan? 
+How might this plan reflect the perspectives of various interested parties 
+(factory owners, the public, regulatory agencies, etc)? 
+Did how you set up your numerical experiment in Problem 1.5 influence your conclusions? 
+Might they have changed with a different experimental design?
+
+## Problem 1.6
+What do you think should be investigated further to improve your model? 
+What assumptions did the problem or you make that should be kept in mind when 
+interpreting your results?
+
+# References
