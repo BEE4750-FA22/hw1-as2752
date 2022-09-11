@@ -29,13 +29,19 @@ The two key parameters in this diagram are
 $X_1$ (the amount of water treated by land in $m^3/day$) and
 $X_2$ (the amount of water treated chemically in $m^3/day$).
 
+The diagram highlights how water is moving from the plant and split into three avenues:
+land treatment, chemical treatment, and direct deposit into Pristine Brook. Each arrow is labelled 
+with the amount of water being moved (in $m^3/day$) and the concentration of water in that stream 
+(in $kg/day$ and $kg/m^3$).
+
 ## Problem 1.2
 
 In order to determine the YUK concentration of the total $100  m^3/day$ after treatment,
 we must determine the individual amount of YUK that is actually making it to Pristine Brook. 
-Here, $M_l$ is the mass of YUK from land treatment, $M_c$ is the mass of YUK from chemical
-treatment, $M_u$ is the mass of YUK going directly to the brook, and $M_t$ is the total mass
-of YUK reaching the brook.
+Here, $M_l$ is the mass of YUK from land treatment (which has an 80% removal efficiency), 
+$M_c$ is the mass of YUK from chemical treatment (with an efficiency of $1-0.005X_2$), 
+$M_u$ is the mass of YUK going directly to the brook, and $M_t$ is the total mass
+of YUK reaching the brook (the sum of all three components).
 
 ``` math
 M_l = 0.2  kg/m^3 * X_1  m^3/day = 0.2X_1  kg/day
