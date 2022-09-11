@@ -24,11 +24,13 @@ Pkg.instantiate()
 ## Problem 1.1
 ![System Diagram]("model_image.png")
 Figure 1 (next page) shows a diagram of the system. 
+
 The two key parameters in this diagram are 
 $X_1$ (the amount of water treated by land in $m^3/day$) and
 $X_2$ (the amount of water treated chemically in $m^3/day$).
 
 ## Problem 1.2
+
 In order to determine the YUK concentration of the total $100  m^3/day$ after treatment,
 we must determine the individual amount of YUK that is actually making it to Pristine Brook. 
 Here, $M_l$ is the mass of YUK from land treatment, $M_c$ is the mass of YUK from chemical
@@ -56,6 +58,7 @@ C_Y = M_t / 100 m^3/day = 1 - 0.008X_1 - 0.01X_2 + 0.00005X_2^2 kg/m^3
 ```
 
 ## Problem 1.3
+
 The following function takes $X_1$ and $X_2$ as parameters and
 returns the concentration of YUK and cost of treatment in tuple form.
 Note that the concentration calculated in the function is in units of kg/day. 
@@ -102,19 +105,41 @@ vline!([20], label="EPA limit")
 ```
 
 Based on the resulting scatter plot, it seems as though the array of treatments is somewhat parabolic.
-If we wanted to reach as low YUK concentrations as possible, we could reach 18 kg/day for $350$$/day$.
-If we wanted to reach as low costs as possible, we could meet the 20 kg/day limit for approximately $240$$/day$.
+If we wanted to reach as low YUK concentrations as possible, we could reach 18 kg/day for $350dollars/day$.
+If we wanted to reach as low costs as possible, we could meet the 20 kg/day limit for approximately $240dollars/day$.
 
 ## Problem 1.5
-Based on the plot from Problem 1.5, how would you select a treatment plan? 
-How might this plan reflect the perspectives of various interested parties 
-(factory owners, the public, regulatory agencies, etc)? 
-Did how you set up your numerical experiment in Problem 1.5 influence your conclusions? 
-Might they have changed with a different experimental design?
+
+I would select a treatment plan depending on my priorities; if I care primarily about cost, I would choose the treatment plan 
+that costs the least while still meeting EPA regulations, i.e. the 240 dollars/day plan. This would reflect the 
+perspectives of factory owners and other financial stakeholders (investors, workers, etc.).
+
+If I was the "public", or someone living in the area that made direct contact with Pristine Brook (through recreation, 
+drinking water, fishing, etc.), then I might push for a more expensive but more effective treatment plan, such as the 350 dollars/day
+plan that reduces YUK concentrations to 18 kg/day.
+
+Interestingly, I think that regulatory agencies might be indifferent to the cost vs concentration debate as long as their limits 
+are reached. In setting this limit, there must be some certainty that concentrations of 20 kg/day are not a significant danger to 
+public health.
+
+The way that my numerical experiment in Problem 1.4 was set up ensured that the treatment options tested would all meet 
+regulations; the experiment was purely a comparison of cost vs _how far_ below the limit a treatment plan went. This is why I do not 
+think a regulatory agency (the EPA in this case) would have a strong preference for any of the tested treatment plans; all of them 
+meet requirements and are therefore outside the concern of the EPA.
+
+My conclusions might have changed if I had allowed some of the water to be sent directly to Pristine Brook; it is possible that 
+there would have been even more cost reductions possible had I tested out these scenarios.
 
 ## Problem 1.6
-What do you think should be investigated further to improve your model? 
-What assumptions did the problem or you make that should be kept in mind when 
-interpreting your results?
+
+As I stated in Problem 1.5, the key assumption I made was that all of the water had to be treated (i.e. none of it could 
+be sent directly to Pristine Brook). Given the fact that we were able to meet EPA standards with a wide variety of combinations 
+indicates that this assumption was not necessarily true.
+
+Therefore, one could improve my model by adding in $(X_1,X_2)$ pairs that do not follow the $X_1+X_2=100$ constraint. Instead, 
+these pairs would follow a $X_1+X_2<100$ constraint. I believe that this could reduce the minimum cost for meeting regulations 
+and lead to slightly different conclusions about the most cost-effective treatment options.
 
 # References
+1. Syntax for Scatter Plots: https://plotly.com/julia/line-and-scatter/ 
+2. Syntax for vline!(): https://docs.juliaplots.org/stable/api/#Plots.vline!-Tuple 
